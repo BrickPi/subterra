@@ -5,6 +5,7 @@
 #include "GLFW/glfw3.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
+#include "cglm/cglm.h"
 
 #include "subterra/shader.h"
 
@@ -14,11 +15,11 @@ void key_cb(GLFWwindow* window, int key, int scancode, int action, int mods);
 void fb_cb(GLFWwindow* window, int width, int height);
 
 float vertices[] = {
-    /* positions          colors              texture coords */
-     0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, /* top right */
-     0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, /* bottom right */
-    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, /* bottom left */
-    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  /* top left */
+   /*positions            texture coords */
+     0.5f,  0.5f, 0.0f,   1.0f, 1.0f, /* top right */
+     0.5f, -0.5f, 0.0f,   1.0f, 0.0f, /* bottom right */
+    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, /* bottom left */
+    -0.5f,  0.5f, 0.0f,   0.0f, 1.0f  /* top left */
 };
 unsigned int indices[] = {
     0, 1, 3,
@@ -70,14 +71,11 @@ int main()
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
         /* position attribute */
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
-        /* color attribute */
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-        glEnableVertexAttribArray(1);
         /* texcoord attribute */
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+        glEnableVertexAttribArray(1);
     }
     
     /* textures & shaders */

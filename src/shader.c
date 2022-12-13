@@ -2,8 +2,8 @@
 
 unsigned int shaderProgram;
 
-const char* vertexShaderSource = "#version 330 core\nlayout (location=0) in vec3 aPos;layout (location=1) in vec3 aColour;layout (location=2) in vec2 aTexCoord;out vec3 colour;out vec2 TexCoord;void main(){gl_Position=vec4(aPos,1.0);colour=aColour;TexCoord=vec2(aTexCoord.x,aTexCoord.y);}\0";
-const char* fragmentShaderSource = "#version 330 core\nout vec4 FragColor;in vec3 colour;in vec2 TexCoord;uniform sampler2D tex;void main(){FragColor=texture(tex,TexCoord);}\0";
+const char* vertexShaderSource = "#version 330 core\nlayout (location=0) in vec3 aPos;layout (location=1) in vec2 aTexCoord;out vec2 TexCoord;void main(){gl_Position=vec4(aPos,1.0);TexCoord=vec2(aTexCoord.x,aTexCoord.y);}\0";
+const char* fragmentShaderSource = "#version 330 core\nout vec4 FragColor;in vec2 TexCoord;uniform sampler2D tex;void main(){FragColor=texture(tex,TexCoord);}\0";
 
 void shader_load()
 {
