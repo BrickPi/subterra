@@ -58,5 +58,5 @@ void shader_clean()
 void shader_transform(mat4* mat)
 {
     unsigned int loc = glGetUniformLocation(shaderProgram, "transform");
-    glUniform4fv(loc, sizeof(*mat), mat);
+    glUniformMatrix4fv(loc, 1, GL_FALSE, (float*)mat);
 }

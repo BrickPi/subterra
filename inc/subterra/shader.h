@@ -5,4 +5,4 @@
 void shader_load();
 void shader_use();
 void shader_clean();
-void shader_transform(void* mat);
+void shader_transform(mat4* mat);

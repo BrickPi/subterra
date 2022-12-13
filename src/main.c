@@ -103,9 +103,9 @@ int main()
         stbi_image_free(data);
     }
 
-    mat4 trans = {1.0f};
-    glm_rotate(trans, glm_rad(90.0f), GLM_ZUP);
-    glm_scale(trans, (vec3){0.5f,0.5f,0.5f});
+    mat4 trans;
+    glm_mat4_identity(trans);
+    glm_rotate(trans, glm_rad(90.0f), (vec3){0.0f,0.0f,1.0f});
     shader_transform(&trans);
 
     /* main loop */
