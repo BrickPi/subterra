@@ -54,7 +54,6 @@ int main()
         glfwSwapInterval(1); /* vsync */
         gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glEnable(GL_CULL_FACE);
         glViewport(0, 0, 640, 480);
         glfwSetFramebufferSizeCallback(window, fb_cb);
     }
