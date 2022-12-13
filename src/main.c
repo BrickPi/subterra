@@ -16,14 +16,47 @@ void fb_cb(GLFWwindow* window, int width, int height);
 
 float vertices[] = {
    /*positions            texture coords */
-     0.5f,  0.5f, 0.0f,   1.0f, 1.0f, /* top right */
-     0.5f, -0.5f, 0.0f,   1.0f, 0.0f, /* bottom right */
-    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, /* bottom left */
-    -0.5f,  0.5f, 0.0f,   0.0f, 1.0f  /* top left */
-};
-unsigned int indices[] = {
-    0, 1, 3,
-    1, 2, 3
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 };
 
 FILE* logfile;
@@ -57,19 +90,17 @@ int main()
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glViewport(0, 0, 640, 480);
         glfwSetFramebufferSizeCallback(window, fb_cb);
+        glEnable(GL_DEPTH_TEST); 
     }
     
     /* setup primitives */
-    unsigned int VBO, VAO, EBO;
+    unsigned int VBO, VAO;
     {
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
-        glGenBuffers(1, &EBO);
         glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
         glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
         /* position attribute */
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
@@ -106,16 +137,11 @@ int main()
     /* all the matrix stuff */
     mat4 model;
     glm_mat4_identity(model);
-    glm_rotate(model, glm_rad(-55.0f), (vec3){1.0f,0.0f,0.0f});
-
     mat4 view;
     glm_mat4_identity(view);
     glm_translate(view, (vec3){0.0f,0.0f,-3.0f});
-
     mat4 proj;
     glm_perspective(glm_rad(45.0f), 640/480, 0.1f, 100.0f, proj);
-
-    shader_uniforms(&proj, &view, &model);
 
     /* main loop */
     while(!glfwWindowShouldClose(window))
@@ -125,16 +151,18 @@ int main()
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture);
+        
         shader_use();
+        glm_rotate(model, glm_rad(1.0f), (vec3){0.5f,1.0f,0.0f});
+        shader_uniforms(&proj, &view, &model);
         glBindVertexArray(VAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
 
         glfwSwapBuffers(window);
     }
 
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
     shader_clean();
     glfwSetErrorCallback(NULL);
     glfwTerminate();
