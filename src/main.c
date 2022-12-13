@@ -8,11 +8,13 @@
 #include "cglm/cglm.h"
 
 #include "subterra/shader.h"
+#include "subterra/player.h"
 
 /* forward definitions */
 void error_cb(int code, const char* description);
 void key_cb(GLFWwindow* window, int key, int scancode, int action, int mods);
 void fb_cb(GLFWwindow* window, int width, int height);
+void click_cb(GLFWwindow* window, int button, int action, int mods);
 
 float vertices[] = {
    /*positions            texture coords */
@@ -91,6 +93,8 @@ int main()
         glViewport(0, 0, 640, 480);
         glfwSetFramebufferSizeCallback(window, fb_cb);
         glEnable(GL_DEPTH_TEST); 
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        glfwSetMouseButtonCallback(window, click_cb);
     }
     
     /* setup primitives */
@@ -135,26 +139,29 @@ int main()
     }
 
     /* all the matrix stuff */
-    mat4 model;
+    mat4 model; /* each individual object has one of these! */
     glm_mat4_identity(model);
-    mat4 view;
-    glm_mat4_identity(view);
-    glm_translate(view, (vec3){0.0f,0.0f,-3.0f});
-    mat4 proj;
+    /* view matrix is done in player.c */
+    mat4 proj; /* TODO: update aspect based on window resize */
     glm_perspective(glm_rad(45.0f), 640/480, 0.1f, 100.0f, proj);
 
     /* main loop */
+    float lastFrame = 0, delta;
     while(!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        float currentFrame = glfwGetTime();
+        delta = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+        player_input(window, delta);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture);
         
         shader_use();
         glm_rotate(model, glm_rad(1.0f), (vec3){0.5f,1.0f,0.0f});
-        shader_uniforms(&proj, &view, &model);
+        shader_uniforms(&proj, update_camera(), &model);
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -198,11 +205,28 @@ void key_cb(GLFWwindow* window, int key, int scancode, int action, int mods)
             glfwSetWindowPos(window, 0, 0);
             fs = 1;
         }
+        return;
     }
     #endif
+    if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    }
 }
 
 void fb_cb(GLFWwindow* window, int width, int height)
 {
     glViewport(0,0,width,height);
+}
+
+void click_cb(GLFWwindow* window, int button, int action, int mods)
+{
+    if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS)
+    {
+        if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_HIDDEN)
+        {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            return;
+        }
+    }
 }
