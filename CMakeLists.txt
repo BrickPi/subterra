@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
+set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64" CACHE STRING "" FORCE)
 project("subterra" VERSION 0.1 LANGUAGES C CXX)
 
 add_subdirectory(lib/glfw)
