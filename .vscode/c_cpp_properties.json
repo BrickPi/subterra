@@ -4,7 +4,9 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/lib/glfw/include"
+                "${workspaceFolder}/lib/glfw/include",
+                "${workspaceFolder}/lib/cglm/include",
+                "C:/Users/amachens112/w64devkit/include"
             ],
             "defines": [
                 "_DEBUG",

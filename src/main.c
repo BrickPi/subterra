@@ -74,7 +74,7 @@ int main()
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
         /* texcoord attribute */
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3*sizeof(float)));
         glEnableVertexAttribArray(1);
     }
     
@@ -102,6 +102,11 @@ int main()
         }
         stbi_image_free(data);
     }
+
+    mat4 trans = {1.0f};
+    glm_rotate(trans, glm_rad(90.0f), GLM_ZUP);
+    glm_scale(trans, (vec3){0.5f,0.5f,0.5f});
+    shader_transform(&trans);
 
     /* main loop */
     while(!glfwWindowShouldClose(window))
