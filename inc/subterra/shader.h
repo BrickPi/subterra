@@ -5,4 +5,4 @@
 void shader_load();
 void shader_use();
 void shader_clean();
-void shader_transform(mat4* mat);
+void shader_uniforms(mat4* proj, mat4* view, mat4* model);

@@ -103,10 +103,19 @@ int main()
         stbi_image_free(data);
     }
 
-    mat4 trans;
-    glm_mat4_identity(trans);
-    glm_rotate(trans, glm_rad(90.0f), (vec3){0.0f,0.0f,1.0f});
-    shader_transform(&trans);
+    /* all the matrix stuff */
+    mat4 model;
+    glm_mat4_identity(model);
+    glm_rotate(model, glm_rad(-55.0f), (vec3){1.0f,0.0f,0.0f});
+
+    mat4 view;
+    glm_mat4_identity(view);
+    glm_translate(view, (vec3){0.0f,0.0f,-3.0f});
+
+    mat4 proj;
+    glm_perspective(glm_rad(45.0f), 640/480, 0.1f, 100.0f, proj);
+
+    shader_uniforms(&proj, &view, &model);
 
     /* main loop */
     while(!glfwWindowShouldClose(window))

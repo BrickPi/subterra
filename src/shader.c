@@ -2,7 +2,7 @@
 
 unsigned int shaderProgram;
 
-const char* vertexShaderSource = "#version 330 core\nlayout (location=0) in vec3 aPos;layout (location=1) in vec2 aTexCoord;out vec2 TexCoord;uniform mat4 transform;void main(){gl_Position=transform*vec4(aPos,1.0);TexCoord=vec2(aTexCoord.x,aTexCoord.y);}\0";
+const char* vertexShaderSource = "#version 330 core\nlayout (location=0) in vec3 aPos;layout (location=1) in vec2 aTexCoord;out vec2 TexCoord;uniform mat4 model;uniform mat4 view;uniform mat4 proj;void main(){gl_Position=proj*view*model*vec4(aPos,1.0);TexCoord=vec2(aTexCoord.x,aTexCoord.y);}\0";
 const char* fragmentShaderSource = "#version 330 core\nout vec4 FragColor;in vec2 TexCoord;uniform sampler2D tex;void main(){FragColor=texture(tex,TexCoord);}\0";
 
 void shader_load()
@@ -55,8 +55,12 @@ void shader_clean()
     shaderProgram = 0;
 }
 
-void shader_transform(mat4* mat)
+void shader_uniforms(mat4* proj, mat4* view, mat4* model)
 {
-    unsigned int loc = glGetUniformLocation(shaderProgram, "transform");
-    glUniformMatrix4fv(loc, 1, GL_FALSE, (float*)mat);
+    unsigned int loc = glGetUniformLocation(shaderProgram, "proj");
+    glUniformMatrix4fv(loc, 1, GL_FALSE, (float*)proj);
+    loc = glGetUniformLocation(shaderProgram, "view");
+    glUniformMatrix4fv(loc, 1, GL_FALSE, (float*)view);
+    loc = glGetUniformLocation(shaderProgram, "model");
+    glUniformMatrix4fv(loc, 1, GL_FALSE, (float*)model);
 }
