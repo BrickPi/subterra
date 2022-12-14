@@ -1,86 +1,11 @@
-#include <stdio.h>
-#include <time.h>
+#include "subterra/main.h"
 
-#include "glad/glad.h"
-#include "GLFW/glfw3.h"
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb/stb_image.h"
-#include "cglm/cglm.h"
-
-#include "subterra/shader.h"
-#include "subterra/player.h"
-
-/* forward definitions */
-void error_cb(int code, const char* description);
-void key_cb(GLFWwindow* window, int key, int scancode, int action, int mods);
-void fb_cb(GLFWwindow* window, int width, int height);
-void click_cb(GLFWwindow* window, int button, int action, int mods);
-
-float vertices[] = {
-   /*positions            texture coords */
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-     0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-     0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-};
-float plane[] = {
-    0.5,0.5,0,
-    0.5,-0.5,0
-    -0.5,-0.5,0,
-    -0.5,0.5,0
-};
-
-FILE* logfile;
 mat4 proj;
 
 /* main function, with main loop */
 int main()
 {
-    /* clear logfile */
-    {
-        logfile = fopen("log.txt", "w");
-        time_t t = time(NULL);
-        struct tm tm = *localtime(&t);
-        fprintf(logfile, "subterra log %d-%02d-%02d %02d:%02d:%02d\n", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
-        fclose(logfile);
-    }
+    logger_init();
     
     /* basic glfw & gl init */
     GLFWwindow* window;
@@ -113,7 +38,7 @@ int main()
         glGenBuffers(1, &VBO);
         glBindVertexArray(VAO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
         /* position attribute */
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
@@ -139,15 +64,9 @@ int main()
         int width, height, nrChannels;
         stbi_set_flip_vertically_on_load(1);
         unsigned char* data = stbi_load("res/container.jpg", &width, &height, &nrChannels, 4);
-        if(data)
-        {
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-            glGenerateMipmap(GL_TEXTURE_2D);
-        } else {
-            logfile = fopen("log.txt", "a+");
-            fprintf(logfile, "ERROR LOADING TEXTURE: res/container.jpg!\n");
-            fclose(logfile);
-        }
+        if(!data) { logger_log("ERROR LOADING TEXTURE: res/container.jpg!\n"); }
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
         stbi_image_free(data);
         /* cobblestone */
         glGenTextures(1, &floortex);
@@ -205,12 +124,7 @@ int main()
     return 0;
 }
 
-void error_cb(int code, const char* description)
-{
-    logfile = fopen("log.txt", "a+");
-    fprintf(logfile, "ERROR IN GLFW: CODE %i, %s\n", code, description);
-    fclose(logfile);
-}
+void error_cb(int code, const char* description) { char* s; sprintf(s, "ERROR IN GLFW: CODE %i, %s\n", code, description); logger_log(s); }
 
 char fs = 0;
 int w=640,h=480,x=0,y=0;
