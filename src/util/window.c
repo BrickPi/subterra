@@ -1,6 +1,9 @@
 #include "subterra/util/window.h"
 #include "subterra/gfx/geometry.i"
 
+GLFWwindow* window;
+unsigned int CUBEV, VAO, PLANEV;
+
 void window_init()
 {
     /* create window with OpenGL Core 3.3 */

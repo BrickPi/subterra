@@ -1,6 +1,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "subterra/main.h"
 
+mat4 proj;
+
 /* main function, with main loop */
 int main()
 {

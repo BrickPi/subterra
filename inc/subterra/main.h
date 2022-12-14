@@ -1,3 +1,5 @@
+#ifndef _H_SUBTERRA_MAIN
+#define _H_SUBTERRA_MAIN
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "stb/stb_image.h"
@@ -6,7 +8,5 @@
 #include "subterra/gfx/shader.h"
 #include "subterra/player.h"
 #include "subterra/util/logger.h"
-#ifndef _H_SUBTERRA_MAIN
-#define _H_SUBTERRA_MAIN
-mat4 proj;
+extern mat4 proj;
 #endif

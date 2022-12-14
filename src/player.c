@@ -1,5 +1,7 @@
 #include "subterra/player.h"
 
+mat4* update_camera();
+
 vec3 camera_pos = {0,0,3};
 vec3 camera_front = {0,0,-1};
 vec3 camera_up = {0,1,0};
