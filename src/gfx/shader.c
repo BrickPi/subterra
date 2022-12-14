@@ -1,4 +1,4 @@
-#include "subterra/shader.h"
+#include "subterra/gfx/shader.h"
 
 unsigned int shaderProgram;
 

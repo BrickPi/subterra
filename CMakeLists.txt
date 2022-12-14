@@ -8,7 +8,7 @@ include_directories(lib/glfw/include)
 add_subdirectory(lib/cglm)
 include_directories(lib/cglm/include)
 
-add_executable(subterra src/main.c src/glad.c src/shader.c src/player.c src/logger.c)
+add_executable(subterra src/main.c src/util/glad.c src/util/logger.c src/util/window.c src/gfx/shader.c src/player.c )
 target_include_directories(subterra PUBLIC inc)
 target_link_libraries(subterra glfw ${GLFW_LIBRARIES} cglm)
 file(COPY res DESTINATION ./)

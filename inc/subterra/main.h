@@ -7,14 +7,12 @@
 #include "stb/stb_image.h"
 #include "cglm/cglm.h"
 
-#include "subterra/shader.h"
+#include "subterra/util/window.h"
+#include "subterra/gfx/shader.h"
 #include "subterra/player.h"
-#include "subterra/logger.h"
+#include "subterra/util/logger.h"
 
-void error_cb(int code, const char* description);
-void key_cb(GLFWwindow* window, int key, int scancode, int action, int mods);
-void fb_cb(GLFWwindow* window, int width, int height);
-void click_cb(GLFWwindow* window, int button, int action, int mods);
+#include "subterra/util/callback.h"
 
 /* the basix geometry we need to do everything */
 float cube[] = {
