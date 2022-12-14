@@ -1,6 +1,6 @@
 #include "subterra/util/callback.h"
 
-void error_cb(int code, const char* description) { char* s; sprintf(s, "ERROR IN GLFW: CODE %i, %s\n", code, description); logger_log(s); }
+void error_cb(int code, const char* description) { char* s = NULL; sprintf(s, "ERROR IN GLFW: CODE %i, %s\n", code, description); logger_log(s); }
 
 char fs = 0;
 int w=640,h=480,x=0,y=0;

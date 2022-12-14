@@ -4,7 +4,6 @@
 #include "stb/stb_image.h"
 #include "stdlib.h"
 #include "subterra/util/logger.h"
-void create_texture(char* filename, char* texname, char cube);
-unsigned int get_texture(char* texname);
-void delete_texture(char* texname);
+unsigned int create_texture(char* filename, char cube);
+void delete_texture(unsigned int texture);
 #endif

@@ -20,23 +20,14 @@ void shader_load()
     glLinkProgram(shaderProgram);
     int success;
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-    if(!success) {
-        FILE* logfile = fopen("log.txt", "a+");
-        fprintf(logfile, "ERROR COMPILING VERTEX SHADER!\n");
-        fclose(logfile);
-    }
+    if(!success)
+        logger_log("ERROR COMPILING VERTEX SHADER!\n");
     glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if(!success) {
-        FILE* logfile = fopen("log.txt", "a+");
-        fprintf(logfile, "ERROR COMPILING FRAGMENT SHADER\n");
-        fclose(logfile);
-    }
+    if(!success)
+        logger_log("ERROR COMPILING FRAGMENT SHADER!\n");
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-    if(!success) {
-        FILE* logfile = fopen("log.txt", "a+");
-        fprintf(logfile, "ERROR LINKING SHADER PROGRAM!\n");
-        fclose(logfile);
-    }
+    if(!success)
+        logger_log("ERROR LINKING SHADER PROGRAM!\n");
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
     shader_use();
