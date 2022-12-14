@@ -1,3 +1,4 @@
+#include "subterra/main.h"
 #ifndef _H_SUBTERRA_CALLBACK
 #define _H_SUBTERRA_CALLBACK
 void error_cb(int code, const char* description);

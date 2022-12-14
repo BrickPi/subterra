@@ -1,32 +1,12 @@
+#define STB_IMAGE_IMPLEMENTATION
 #include "subterra/main.h"
-
-mat4 proj;
 
 /* main function, with main loop */
 int main()
 {
     logger_init(); /* see logger.c */
     window_init(); /* see window.c */
-    
-    /* setup primitives */
-    unsigned int VBO, VAO, PVBO, PVAO;
-    {
-        glGenVertexArrays(1, &VAO);
-        glGenBuffers(1, &VBO);
-        glBindVertexArray(VAO);
-        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
-        /* position attribute */
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-        glEnableVertexAttribArray(0);
-        /* texcoord attribute */
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3*sizeof(float)));
-        glEnableVertexAttribArray(1);
-        /* plane */
-        glGenBuffers(1, &PVBO);
-        glBindBuffer(GL_ARRAY_BUFFER, PVBO);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(plane), plane, GL_STATIC_DRAW);
-    }
+    window_gl_init(); /* see window.c */
     
     /* textures & shaders */
     shader_load();
@@ -84,9 +64,10 @@ int main()
         glm_rotate(model, glm_rad(1.0f), (vec3){0.5f,1.0f,0.0f});
         shader_uniforms(&proj, update_camera(), &model);
         glBindVertexArray(VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, CUBEV);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         shader_uniforms(&proj, update_camera(), &floormodel);
-        glBindBuffer(GL_ARRAY_BUFFER, PVBO);
+        glBindBuffer(GL_ARRAY_BUFFER, PLANEV);
         glBindTexture(GL_TEXTURE_2D, floortex);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
@@ -94,63 +75,10 @@ int main()
     }
 
     glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &CUBEV);
+    glDeleteBuffers(1, &PLANEV);
     shader_clean();
     glfwSetErrorCallback(NULL);
     glfwTerminate();
     return 0;
-}
-
-void error_cb(int code, const char* description) { char* s; sprintf(s, "ERROR IN GLFW: CODE %i, %s\n", code, description); logger_log(s); }
-
-char fs = 0;
-int w=640,h=480,x=0,y=0;
-void key_cb(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    #ifndef __APPLE__
-    if(key == GLFW_KEY_F11 && action == GLFW_PRESS)
-    {
-        if(fs)
-        {
-            glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_TRUE);
-            glfwSetWindowSize(window, w, h);
-            glfwSetWindowPos(window, x, y);
-            fs = 0;
-        } else {
-            glfwGetWindowSize(window, &w, &h);
-            glfwGetWindowPos(window, &x, &y);
-            glfwSetWindowAttrib(window, GLFW_DECORATED, GLFW_FALSE);
-            const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-            glfwSetWindowSize(window, mode->width, mode->height);
-            glfwSetWindowPos(window, 0, 0);
-            fs = 1;
-        }
-        return;
-    }
-    #endif
-    if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-    {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-        glfwSetCursorPosCallback(window, NULL);
-        lostfocus();
-    }
-}
-
-void fb_cb(GLFWwindow* window, int width, int height)
-{
-    glViewport(0,0,width,height);
-    glm_perspective(glm_rad(45.0f), 640/480, 0.1f, 100.0f, proj);
-}
-
-void click_cb(GLFWwindow* window, int button, int action, int mods)
-{
-    if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS)
-    {
-        if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_HIDDEN)
-        {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            glfwSetCursorPosCallback(window, mouse_input);
-            return;
-        }
-    }
 }
