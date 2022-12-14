@@ -4,4 +4,5 @@
 
 void player_input(GLFWwindow* win, float dt);
 void mouse_input(GLFWwindow* window, double xpos, double ypos);
+void lostfocus();
 mat4* update_camera();

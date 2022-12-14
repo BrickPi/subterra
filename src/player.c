@@ -75,6 +75,11 @@ void mouse_input(GLFWwindow* window, double xpos, double ypos)
     glm_vec3_copy(direction, camera_front);
 }
 
+void lostfocus()
+{
+    firstMouse = true;
+}
+
 mat4* update_camera()
 {
     vec3 pf;

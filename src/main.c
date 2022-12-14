@@ -241,6 +241,7 @@ void key_cb(GLFWwindow* window, int key, int scancode, int action, int mods)
     {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
         glfwSetCursorPosCallback(window, NULL);
+        lostfocus();
     }
 }
 
