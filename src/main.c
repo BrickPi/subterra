@@ -60,8 +60,15 @@ float vertices[] = {
     -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
     -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 };
+float plane[] = {
+    0.5,0.5,0,
+    0.5,-0.5,0
+    -0.5,-0.5,0,
+    -0.5,0.5,0
+};
 
 FILE* logfile;
+mat4 proj;
 
 /* main function, with main loop */
 int main()
@@ -84,21 +91,23 @@ int main()
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+        glfwWindowHint(GLFW_SAMPLES, 4);
         window = glfwCreateWindow(640, 480, "subterra", NULL, NULL);
         glfwSetKeyCallback(window, key_cb);
         glfwMakeContextCurrent(window);
         glfwSwapInterval(1); /* vsync */
         gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClearColor(0.07f, 0.07f, 0.07f, 1.0f);
         glViewport(0, 0, 640, 480);
         glfwSetFramebufferSizeCallback(window, fb_cb);
-        glEnable(GL_DEPTH_TEST); 
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_MULTISAMPLE);
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
         glfwSetMouseButtonCallback(window, click_cb);
     }
     
     /* setup primitives */
-    unsigned int VBO, VAO;
+    unsigned int VBO, VAO, PVBO, PVAO;
     {
         glGenVertexArrays(1, &VAO);
         glGenBuffers(1, &VBO);
@@ -111,11 +120,15 @@ int main()
         /* texcoord attribute */
         glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3*sizeof(float)));
         glEnableVertexAttribArray(1);
+        /* plane */
+        glGenBuffers(1, &PVBO);
+        glBindBuffer(GL_ARRAY_BUFFER, PVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(plane), plane, GL_STATIC_DRAW);
     }
     
     /* textures & shaders */
     shader_load();
-    unsigned int texture;
+    unsigned int texture, floortex;
     {
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
@@ -136,13 +149,26 @@ int main()
             fclose(logfile);
         }
         stbi_image_free(data);
+        /* cobblestone */
+        glGenTextures(1, &floortex);
+        glBindTexture(GL_TEXTURE_2D, floortex);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        data = stbi_load("res/cobblestone.jpg", &width, &height, &nrChannels, 4);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        stbi_image_free(data);
     }
 
     /* all the matrix stuff */
-    mat4 model; /* each individual object has one of these! */
-    glm_mat4_identity(model);
+    mat4 model = GLM_MAT4_IDENTITY_INIT; /* each individual object has one of these! */
+    mat4 floormodel = GLM_MAT4_IDENTITY_INIT;
+    glm_translate(floormodel, (vec3){0,-2.5,0});
+    glm_rotate(floormodel, glm_rad(90), GLM_XUP);
+    glm_scale(floormodel, (vec3){2.5,8,1});
     /* view matrix is done in player.c */
-    mat4 proj; /* TODO: update aspect based on window resize */
     glm_perspective(glm_rad(45.0f), 640/480, 0.1f, 100.0f, proj);
 
     /* main loop */
@@ -157,13 +183,16 @@ int main()
         player_input(window, delta);
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        
         shader_use();
+        glBindTexture(GL_TEXTURE_2D, texture);
         glm_rotate(model, glm_rad(1.0f), (vec3){0.5f,1.0f,0.0f});
         shader_uniforms(&proj, update_camera(), &model);
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 36);
+        shader_uniforms(&proj, update_camera(), &floormodel);
+        glBindBuffer(GL_ARRAY_BUFFER, PVBO);
+        glBindTexture(GL_TEXTURE_2D, floortex);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
 
         glfwSwapBuffers(window);
     }
@@ -211,12 +240,14 @@ void key_cb(GLFWwindow* window, int key, int scancode, int action, int mods)
     if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        glfwSetCursorPosCallback(window, NULL);
     }
 }
 
 void fb_cb(GLFWwindow* window, int width, int height)
 {
     glViewport(0,0,width,height);
+    glm_perspective(glm_rad(45.0f), 640/480, 0.1f, 100.0f, proj);
 }
 
 void click_cb(GLFWwindow* window, int button, int action, int mods)
@@ -226,6 +257,7 @@ void click_cb(GLFWwindow* window, int button, int action, int mods)
         if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_HIDDEN)
         {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            glfwSetCursorPosCallback(window, mouse_input);
             return;
         }
     }
