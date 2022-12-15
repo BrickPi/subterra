@@ -54,7 +54,7 @@ void shader_load()
 
 void set_instance_uniform(int count, vec3* arr)
 {
-    glUniform3fv(glGetUniformLocation(instance_sp, "posarr[0]"), count, arr);
+    glUniform3fv(glGetUniformLocation(instance_sp, "posarr[0]"), count, (const float*)arr);
 }
 
 void shader_use_flat()
