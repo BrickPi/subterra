@@ -11,15 +11,28 @@ int main()
     
     /* textures & shaders */
     shader_load();
-    unsigned int boxtex = create_texture("res/container.jpg", false);
-    unsigned int floortex = create_texture("res/cobblestone.jpg", false);
+    unsigned int floortex = create_texture("res/cobblestone.jpg");
+    unsigned int walltex = create_texture("res/wall.jpg");
 
     /* all the matrix stuff */
-    mat4 model = GLM_MAT4_IDENTITY_INIT; /* each individual object has one of these! */
+    /* each individual object has a model! */
     mat4 floormodel = GLM_MAT4_IDENTITY_INIT;
     glm_translate(floormodel, (vec3){0,-2.5,0});
     glm_rotate(floormodel, glm_rad(90), GLM_XUP);
-    glm_scale(floormodel, (vec3){2.5,8,1});
+    glm_scale(floormodel, (vec3){2.5,2.5,1});
+    mat4 wallmodel = GLM_MAT4_IDENTITY_INIT;
+    glm_translate(wallmodel, (vec3){-0.75,-0.25,0});
+    glm_rotate(wallmodel, glm_rad(90), GLM_XUP);
+    glm_rotate(wallmodel, glm_rad(90), GLM_YUP);
+    glm_rotate(wallmodel, glm_rad(90), GLM_ZUP);
+    glm_scale(wallmodel, (vec3){2.5,3.5,1});
+    mat4 wallmodel2 = GLM_MAT4_IDENTITY_INIT;
+    glm_translate(wallmodel2, (vec3){1.75,-0.25,0});
+    glm_rotate(wallmodel2, glm_rad(90), GLM_XUP);
+    glm_rotate(wallmodel2, glm_rad(90), GLM_YUP);
+    glm_rotate(wallmodel2, glm_rad(90), GLM_ZUP);
+    glm_scale(wallmodel2, (vec3){2.5,3.5,1});
+
     /* view matrix is done in player.c */
     glm_perspective(glm_rad(45.0f), 640/480, 0.1f, 100.0f, proj);
 
@@ -33,18 +46,23 @@ int main()
         delta = currentFrame - lastFrame;
         lastFrame = currentFrame;
         player_input(window, delta);
+        mat4* view = update_camera();
 
         glActiveTexture(GL_TEXTURE0);
         shader_use();
-        glBindTexture(GL_TEXTURE_2D, boxtex);
-        glm_rotate(model, glm_rad(1.0f), (vec3){0.5f,1.0f,0.0f});
-        shader_uniforms(&proj, update_camera(), &model);
         glBindVertexArray(VAO);
-        glBindBuffer(GL_ARRAY_BUFFER, CUBEV);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-        shader_uniforms(&proj, update_camera(), &floormodel);
+
+        shader_uniforms(&proj, view, &floormodel);
         glBindBuffer(GL_ARRAY_BUFFER, PLANEV);
         glBindTexture(GL_TEXTURE_2D, floortex);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        shader_uniforms(&proj, view, &wallmodel);
+        glBindTexture(GL_TEXTURE_2D, walltex);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        shader_uniforms(&proj, view, &wallmodel2);
+        glBindTexture(GL_TEXTURE_2D, walltex);
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         glfwSwapBuffers(window);
