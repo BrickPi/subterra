@@ -55,14 +55,14 @@ int main()
 
         /* draw all X walls */
         shader_uniforms(&proj, view, &Xwallmodel);
-        set_instance_uniform(46, Xwalls);
+        set_instance_uniform(49, Xwalls);
         glBindTexture(GL_TEXTURE_2D, walltex);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 46);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 49);
 
         /* draw all Z walls */
         shader_uniforms(&proj, view, &Zwallmodel);
-        set_instance_uniform(32, Zwalls);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 32);
+        set_instance_uniform(34, Zwalls);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 34);
 
         glfwSwapBuffers(window);
     }
@@ -92,7 +92,7 @@ W D W W D W W W W W D W W   W
 W D D D D D D D D W D W W    
 W W D W W W D W D D D W W W  
 W W D W W W D D W W W W W W  
-W W D W W W W W W W d d W    
+W W D W W W W W W W D D W    
 W W D D D D D D D D D W W   W
 W W W W W W W D W W W W W   E <- E is for exit!
 */
