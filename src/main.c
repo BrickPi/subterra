@@ -48,21 +48,21 @@ int main()
         glBindVertexArray(VAO);
         shader_use_instanced();
         shader_uniforms(&proj, view, &floormodel);
-        set_instance_uniform(37, floors);
+        set_instance_uniform(42, floors);
         glBindBuffer(GL_ARRAY_BUFFER, PLANEV);
         glBindTexture(GL_TEXTURE_2D, floortex);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 37);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 42);
 
         /* draw all X walls */
         shader_uniforms(&proj, view, &Xwallmodel);
-        set_instance_uniform(41, Xwalls);
+        set_instance_uniform(46, Xwalls);
         glBindTexture(GL_TEXTURE_2D, walltex);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 41);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 46);
 
         /* draw all Z walls */
         shader_uniforms(&proj, view, &Zwallmodel);
-        set_instance_uniform(31, Zwalls);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 31);
+        set_instance_uniform(32, Zwalls);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 32);
 
         glfwSwapBuffers(window);
     }
@@ -92,7 +92,7 @@ W D W W D W W W W W D W W   W
 W D D D D D D D D W D W W    
 W W D W W W D W D D D W W W  
 W W D W W W D D W W W W W W  
-W W D W W W W W W W     W    
-W W D D D D D D       W W   W
+W W D W W W W W W W d d W    
+W W D D D D D D D D D W W   W
 W W W W W W W D W W W W W   E <- E is for exit!
 */
