@@ -55,9 +55,9 @@ int main()
 
         /* draw all X walls */
         shader_uniforms(&proj, view, &Xwallmodel);
-        set_instance_uniform(31, Xwalls);
+        set_instance_uniform(39, Xwalls);
         glBindTexture(GL_TEXTURE_2D, walltex);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 31);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 39);
 
         /* draw all Z walls */
         shader_uniforms(&proj, view, &Zwallmodel);
@@ -93,6 +93,6 @@ W D D D D D D D D W D W W
 W W D W W W D W D D D W W W  
 W W D W W W D D W W W W W W  
 W W D W W W W W W W     W    
-W W D d d d d         W W   W
+W W D D D D D         W W   W
 W W W W W W W   W W W W W   E <- E is for exit!
 */
