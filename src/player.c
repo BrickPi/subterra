@@ -12,7 +12,7 @@ void player_input(GLFWwindow* win, float dt)
 {
     vec3 temp;
 
-    const float speed = 2.0f * dt;
+    const float speed = 5.0f * dt;
     if (glfwGetKey(win, GLFW_KEY_W) == GLFW_PRESS)
     {
         glm_vec3_scale(camera_front, speed, temp);
