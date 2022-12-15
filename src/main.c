@@ -31,7 +31,7 @@ int main()
     /* view matrix is done in player.c */
     glm_perspective(glm_rad(45.0f), 640/480, 0.1f, 100.0f, proj);
 
-    vec3 Xwalls[16] = {
+    vec3 Xwalls[23] = {
         -3,0.075,1.75,
 
         -2,0.075,1.75,
@@ -56,9 +56,21 @@ int main()
 
         1,0.075,-8.25,
 
-        1,0.075,-3.25
+        1,0.075,-3.25,
+
+        0,0.075,-3.25,
+        0,0.075,-5.75,
+
+        -1,0.075,-3.25,
+
+        -2,0.075,-3.25,
+        -2,0.075,-5.75,
+
+        -3,0.075,-5.75,
+
+        -1,0.075,-10.75
     };
-    vec3 Zwalls[15] = {
+    vec3 Zwalls[18] = {
         0,0.075,9.25,
         0,0.075,-8.25,
 
@@ -81,9 +93,14 @@ int main()
 
         -3,0.075,-0.75,
 
-        -2,0.075,-3.25
+        -2,0.075,-3.25,
+        
+        -3,0.075,1.75,
+        -3,0.075,4.25,
+
+        -4,0.075,4.25
     };
-    vec3 floors[17] = {
+    vec3 floors[23] = {
         0,-3,2.5,
         0,-2,2.5,
         0,-1,2.5,
@@ -100,7 +117,13 @@ int main()
         -3,2,2.5,
         -3,1,2.5,
         -2,1,2.5,
-        -2,0,2.5
+        -2,0,2.5,
+        -2,-1,2.5,
+        -2,-2,2.5,
+        -2,-3,2.5,
+        -3,-1,2.5,
+        -4,-1,2.5,
+        -4,0,2.5
     };
 
     /* main loop */
@@ -119,21 +142,21 @@ int main()
         glBindVertexArray(VAO);
         shader_use_instanced();
         shader_uniforms(&proj, view, &floormodel);
-        set_instance_uniform(17, floors);
+        set_instance_uniform(23, floors);
         glBindBuffer(GL_ARRAY_BUFFER, PLANEV);
         glBindTexture(GL_TEXTURE_2D, floortex);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 17);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 23);
 
         /* draw all X walls */
         shader_uniforms(&proj, view, &Xwallmodel);
-        set_instance_uniform(16, Xwalls);
+        set_instance_uniform(23, Xwalls);
         glBindTexture(GL_TEXTURE_2D, walltex);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 16);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 23);
 
         /* draw all Z walls */
         shader_uniforms(&proj, view, &Zwallmodel);
-        set_instance_uniform(15, Zwalls);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 15);
+        set_instance_uniform(18, Zwalls);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 18);
 
         glfwSwapBuffers(window);
     }
@@ -153,17 +176,17 @@ maze design
 
 W W W W W W W W W W W W W W W
 W W                          
-W W   W W W W W W W W W W W  
-W           W W W W       W  
+  W   W W W W W W W W W W W  
+            W W W W       W  
 W W   W W W W         W   W  
 W W             W W D W W W  
 W     W W W W W W W D W W    
 W W   W D D D X D D D W W   W <- X is spawn (0, 0) (D is for DONE)
-W W W W D W W W W W D W W   W
-W             d D W D W W    
-W W   W W W   W D D D W W W  
-W W   W W W     W W W W W W  
-W W   W W W W W W W   W W    
+W   W W D W W W W W D W W   W
+W       D D D D D W D W W    
+W W   W W W D W D D D W W W  
+W W   W W W D d W W W W W W  
+W W   W W W W W W W     W    
 W W                   W W   W
 W W W W W W W   W W W W W   E <- E is for exit!
 */
