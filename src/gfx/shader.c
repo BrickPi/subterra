@@ -57,12 +57,12 @@ void set_instance_uniform(int count, vec3* arr)
     glUniform3fv(glGetUniformLocation(instance_sp, "posarr[0]"), count, arr);
 }
 
-inline void shader_use_flat()
+void shader_use_flat()
 {
     glUseProgram(shaderProgram);
 }
 
-inline void shader_use_instanced()
+void shader_use_instanced()
 {
     glUseProgram(instance_sp);
 }
