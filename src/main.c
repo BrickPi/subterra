@@ -48,21 +48,21 @@ int main()
         glBindVertexArray(VAO);
         shader_use_instanced();
         shader_uniforms(&proj, view, &floormodel);
-        set_instance_uniform(85, floors);
+        set_instance_uniform(95, floors);
         glBindBuffer(GL_ARRAY_BUFFER, PLANEV);
         glBindTexture(GL_TEXTURE_2D, floortex);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 85);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 95);
 
         /* draw all X walls */
         shader_uniforms(&proj, view, &Xwallmodel);
-        set_instance_uniform(103, Xwalls);
+        set_instance_uniform(108, Xwalls);
         glBindTexture(GL_TEXTURE_2D, walltex);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 103);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 108);
 
         /* draw all Z walls */
         shader_uniforms(&proj, view, &Zwallmodel);
-        set_instance_uniform(60, Zwalls);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 60);
+        set_instance_uniform(75, Zwalls);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 75);
 
         glfwSwapBuffers(window);
     }
@@ -82,14 +82,14 @@ maze design
 
 W W W W W W W W W W W W W W W
 W W D D D D D D D D D D D D D
-D W D W W W W D D W W W W W  
-D D D D D D W _ _ W D D D W  
-W W D W W W W D D D D W D W  
-W W D D D D D D W W D W W W  
-W D D W W W W W W W D W W    
-W W D W D D D X D D D W     W <- X is spawn (0, 0) (D is for DONE)
-W D W W D W W W W W D W W   W
-W D D D D D D D D W D W W    
+D W D W W W W D D W W W W W D
+D D D D D D W _ _ W D D D W D
+W W D W W W W D D D D W D W D
+W W D D D D D D W W D W W W D
+W D D W W W W W W W D W W D D
+W W D W D D D X D D D W D D W <- X is spawn (0, 0) (D is for DONE)
+W D W W D W W W W W D W W D W
+W D D D D D D D D W D W W D  
 W W D W W W D W D D D W   W  
 W W D W W W D D W W W W   W  
 W W D W W W W W W W D D      
