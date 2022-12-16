@@ -87,12 +87,12 @@ D D D D D D W _ _ W D D D W
 W W D W W W W D D D D W D W  
 W W D D D D D D W W D W W W  
 W D D W W W W W W W D W W    
-W W D W D D D X D D D W W   W <- X is spawn (0, 0) (D is for DONE)
+W W D W D D D X D D D W     W <- X is spawn (0, 0) (D is for DONE)
 W D W W D W W W W W D W W   W
 W D D D D D D D D W D W W    
-W W D W W W D W D D D W W W  
-W W D W W W D D W W W W W W  
-W W D W W W W W W W D D W    
+W W D W W W D W D D D W   W  
+W W D W W W D D W W W W   W  
+W W D W W W W W W W D D      
 W W D D D D D D D D D W W   W
 W W W W W W W D W W W W W   E <- E is for exit!
 */
