@@ -61,8 +61,8 @@ int main()
 
         /* draw all Z walls */
         shader_uniforms(&proj, view, &Zwallmodel);
-        set_instance_uniform(46, Zwalls);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 46);
+        set_instance_uniform(48, Zwalls);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 48);
 
         glfwSwapBuffers(window);
     }
@@ -84,7 +84,7 @@ W W W W W W W W W W W W W W W
 W W                          
   W   W W W W W W W W W W W  
     D       W W W W D D D W  
-W W d W W W W D D D D W D W  
+W W D W W W W D D D D W D W  
 W W D D D D D D W W D W W W  
 W D D W W W W W W W D W W    
 W W D W D D D X D D D W W   W <- X is spawn (0, 0) (D is for DONE)

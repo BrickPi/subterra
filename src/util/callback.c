@@ -29,7 +29,7 @@ void key_cb(GLFWwindow* window, int key, int scancode, int action, int mods)
     #endif
     if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         glfwSetCursorPosCallback(window, NULL);
         lostfocus();
     }
@@ -45,7 +45,7 @@ void click_cb(GLFWwindow* window, int button, int action, int mods)
 {
     if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS)
     {
-        if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_HIDDEN)
+        if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_NORMAL)
         {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
             glfwSetCursorPosCallback(window, mouse_input);

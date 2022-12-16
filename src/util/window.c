@@ -23,7 +23,7 @@ void window_init()
     /* set all the callbacks for input etc */
     glfwSetKeyCallback(window, key_cb);
     glfwSetFramebufferSizeCallback(window, fb_cb);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     glfwSetMouseButtonCallback(window, click_cb);
 }
 
