@@ -14,6 +14,7 @@ int main()
     shader_load();
     unsigned int floortex = create_texture("res/cobblestone.jpg");
     unsigned int walltex = create_texture("res/wall.jpg");
+    unsigned int finishtex = create_texture("res/win.jpg");
 
     /* all the matrix stuff */
     /* each individual object has a model! */
@@ -28,6 +29,10 @@ int main()
     mat4 Zwallmodel = GLM_MAT4_IDENTITY_INIT;
     glm_rotate(Zwallmodel, glm_rad(180), GLM_XUP);
     glm_scale(Zwallmodel, (vec3){2.5,3.5,1});
+    mat4 finishModel = GLM_MAT4_IDENTITY_INIT;
+    glm_rotate(finishModel, glm_rad(180), GLM_XUP);
+    glm_scale(finishModel, (vec3){2.5,3.5,1});
+    glm_translate(finishModel, (vec3){-7,0.075,-15.75});
 
     /* view matrix is done in player.c */
     glm_perspective(glm_rad(45.0f), 640/480, 0.1f, 100.0f, proj);
@@ -48,22 +53,25 @@ int main()
         glBindVertexArray(VAO);
         shader_use_instanced();
         shader_uniforms(&proj, view, &floormodel);
-        set_instance_uniform(99, floors);
+        set_instance_uniform(105, floors);
         glBindBuffer(GL_ARRAY_BUFFER, PLANEV);
         glBindTexture(GL_TEXTURE_2D, floortex);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 99);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 105);
 
         /* draw all X walls */
         shader_uniforms(&proj, view, &Xwallmodel);
-        set_instance_uniform(110, Xwalls);
+        set_instance_uniform(114, Xwalls);
         glBindTexture(GL_TEXTURE_2D, walltex);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 110);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 114);
 
         /* draw all Z walls */
         shader_uniforms(&proj, view, &Zwallmodel);
-        set_instance_uniform(81, Zwalls);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 81);
-
+        set_instance_uniform(88, Zwalls);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 88);
+        shader_use_flat();
+        shader_uniforms(&proj, view, &finishModel);
+        glBindTexture(GL_TEXTURE_2D, finishtex);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
         glfwSwapBuffers(window);
     }
 
@@ -90,9 +98,9 @@ W D D W W W W W W W D W W D D
 W W D W D D D X D D D W D D W <- X is spawn (0, 0) (D is for DONE)
 W D W W D W W W W W D W W D W
 W D D D D D D D D W D W W D D
-W W D W W W D W D D D W   W D
-W W D W W W D D W W W W   W D
-W W D W W W W W W W D D     D
-W W D D D D D D D D D W W   W
-W W W W W W W D W W W W W   E <- E is for exit!
+W W D W W W D W D D D W D W D
+W W D W W W D D W W W W D W D
+W W D W W W W W W W D D | D D
+W W D D D D D D D D D W W D W
+W W W W W W W D W W W W W D E <- E is for exit!
 */

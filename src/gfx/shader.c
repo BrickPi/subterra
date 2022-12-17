@@ -5,7 +5,7 @@ unsigned int shaderProgram, instance_sp;
 const char* vertexShaderSource = "#version 330 core\nlayout (location=0) in vec3 aPos;layout (location=1) in vec2 aTexCoord;out vec2 TexCoord;uniform mat4 model;uniform mat4 view;uniform mat4 proj;void main(){gl_Position=proj*view*model*vec4(aPos,1.0);TexCoord=vec2(aTexCoord.x,aTexCoord.y);}\0";
 const char* fragmentShaderSource = "#version 330 core\nout vec4 FragColor;in vec2 TexCoord;uniform sampler2D tex;void main(){FragColor=texture(tex,TexCoord);}\0";
 
-const char* instanceVertexSource = "#version 330 core\nlayout (location=0) in vec3 aPos;layout (location=1) in vec2 aTexCoord;out vec2 TexCoord;uniform mat4 model;uniform mat4 view;uniform mat4 proj;uniform vec3 posarr[512];void main(){vec3 offset=posarr[gl_InstanceID];gl_Position=proj*view*model*vec4(aPos+offset,1.0);TexCoord=vec2(aTexCoord.x,aTexCoord.y);}\0";
+const char* instanceVertexSource = "#version 330 core\nlayout (location=0) in vec3 aPos;layout (location=1) in vec2 aTexCoord;out vec2 TexCoord;uniform mat4 model;uniform mat4 view;uniform mat4 proj;uniform vec3 posarr[114];void main(){vec3 offset=posarr[gl_InstanceID];gl_Position=proj*view*model*vec4(aPos+offset,1.0);TexCoord=vec2(aTexCoord.x,aTexCoord.y);}\0";
 
 void shader_load()
 {
