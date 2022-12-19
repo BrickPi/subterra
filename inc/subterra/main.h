@@ -8,5 +8,6 @@
 #include "subterra/gfx/texture.h"
 #include "subterra/player.h"
 #include "subterra/util/logger.h"
+#include "subterra/gfx/maze.h"
 extern mat4 proj;
 #endif

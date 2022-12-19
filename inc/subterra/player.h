@@ -3,6 +3,8 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "cglm/cglm.h"
+#include "subterra/gfx/maze.h"
+#include "subterra/util/logger.h"
 void player_input(GLFWwindow* win, float dt);
 void mouse_input(GLFWwindow* window, double xpos, double ypos);
 void lostfocus();

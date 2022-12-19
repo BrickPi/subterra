@@ -2,7 +2,7 @@
 
 mat4* update_camera();
 
-vec3 camera_pos = {0,0,3};
+vec3 camera_pos = {0,0,0};
 vec3 camera_front = {0,0,-1};
 vec3 camera_up = {0,1,0};
 
@@ -39,6 +39,28 @@ void player_input(GLFWwindow* win, float dt)
     }
     /* keep player at ground level */
     camera_pos[1] = 0;
+
+    /* do collision detection and resolution */
+    for (int i = 0; i < 114; i++) /* X walls */
+    {
+        if (camera_pos[0] == Xwalls[i][0] || camera_pos[2] == Xwalls[i][2])
+        {
+            camera_pos[0] = Xwalls[i][0];
+            camera_pos[2] = Xwalls[i][2];
+            logger_log("COLLISION!\n");
+        }
+        
+    }
+    for (int i = 0; i < 88; i++) /* Z walls */
+    {
+        if (camera_pos[0] == Zwalls[i][0] && camera_pos[2] == Zwalls[i][2])
+        {
+            camera_pos[0] = Zwalls[i][0];
+            camera_pos[2] = Zwalls[i][2];
+        }
+    }
+    
+    
 }
 
 float lastX=320,lastY=240,yaw=-90,pitch=0; /* start at half of default resolution, centre */

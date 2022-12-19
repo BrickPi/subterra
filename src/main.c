@@ -1,7 +1,6 @@
 #include "subterra/main.h"
 
 mat4 proj;
-#include "subterra/gfx/maze.i"
 
 /* main function, with main loop */
 int main()

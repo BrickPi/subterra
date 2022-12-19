@@ -1,4 +1,4 @@
-#include "cglm/cglm.h"
+#include "subterra/gfx/maze.h"
 
 vec3 Xwalls[114] = {
     -3,0.075,1.75,
