@@ -43,21 +43,21 @@ void player_input(GLFWwindow* win, float dt)
     /* do collision detection and resolution */
     for (int i = 0; i < 114; i++) /* X walls */
     {
-        if (camera_pos[0] == Xwalls[i][0] || camera_pos[2] == Xwalls[i][2])
+        /*if (camera_pos[0] == Xwalls[i][0] || camera_pos[2] == Xwalls[i][2])
         {
             camera_pos[0] = Xwalls[i][0];
             camera_pos[2] = Xwalls[i][2];
             logger_log("COLLISION!\n");
-        }
+        }*/
         
     }
     for (int i = 0; i < 88; i++) /* Z walls */
     {
-        if (camera_pos[0] == Zwalls[i][0] && camera_pos[2] == Zwalls[i][2])
+        /*if (camera_pos[0] == Zwalls[i][0] && camera_pos[2] == Zwalls[i][2])
         {
             camera_pos[0] = Zwalls[i][0];
             camera_pos[2] = Zwalls[i][2];
-        }
+        }*/
     }
     
     
