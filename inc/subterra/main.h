@@ -10,4 +10,5 @@
 #include "subterra/util/logger.h"
 #include "subterra/gfx/maze.h"
 extern mat4 proj;
+extern char gameActive, won;
 #endif

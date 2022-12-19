@@ -37,10 +37,22 @@ void player_input(GLFWwindow* win, float dt)
         glm_vec3_scale(temp, speed, temp);
         glm_vec3_add(camera_pos, temp, camera_pos);
     }
+    if (glfwGetKey(win, GLFW_KEY_P) == GLFW_PRESS)
+    {
+        char logtxt[32];
+        sprintf(logtxt, "%f, %f, %f\n", camera_pos[0], camera_pos[1], camera_pos[2]);
+        logger_log(logtxt);
+    }
+
     /* keep player at ground level */
     camera_pos[1] = 0;
 
     /* do collision detection and resolution */
+    /* check if at / past winpoint */
+    if (camera_pos[0] <= -17 && camera_pos[2] >= 17)
+    {
+        won = 1;
+    }
     for (int i = 0; i < 114; i++) /* X walls */
     {
         /*if (camera_pos[0] == Xwalls[i][0] || camera_pos[2] == Xwalls[i][2])
@@ -62,6 +74,27 @@ void player_input(GLFWwindow* win, float dt)
     
     
 }
+
+/*
+maze design
+15x15
+
+W W W W W W W W W W W W W W W
+W W D D D D D D D D D D D D D
+D W D W W W W D D W W W W W D
+D D D D D D W _ _ W D D D W D
+W W D W W W W D D D D W D W D
+W W D D D D D D W W D W W W D
+W D D W W W W W W W D W W D D
+W W D W D D D X D D D W D D W <- X is spawn (0, 0) (D is for DONE)
+W D W W D W W W W W D W W D W
+W D D D D D D D D W D W W D D
+W W D W W W D W D D D W D W D
+W W D W W W D D W W W W D W D
+W W D W W W W W W W D D | D D
+W W D D D D D D D D D W W D W
+W W W W W W W D W W W W W D E <- E is for exit!
+*/
 
 float lastX=320,lastY=240,yaw=-90,pitch=0; /* start at half of default resolution, centre */
 bool firstMouse = true;

@@ -52,4 +52,13 @@ void click_cb(GLFWwindow* window, int button, int action, int mods)
             return;
         }
     }
+    if (button == GLFW_MOUSE_BUTTON_2 && action == GLFW_PRESS)
+    {
+        if (!gameActive)
+        {
+            gameActive = 1;
+        } else if (won) {
+            glfwSetWindowShouldClose(window, 1);   
+        }
+    }
 }

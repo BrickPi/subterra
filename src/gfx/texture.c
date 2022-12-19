@@ -1,8 +1,14 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "subterra/gfx/texture.h"
 
-unsigned int create_texture(char* filename)
+unsigned int create_texture(char* filename, char flip)
 {
+    if (flip) 
+    {
+        stbi_set_flip_vertically_on_load(1);
+    } else {
+        stbi_set_flip_vertically_on_load(0);
+    }
     unsigned int texture;
     int width, height, channels;
     glGenTextures(1, &texture);
