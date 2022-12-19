@@ -12,6 +12,8 @@ void player_input(GLFWwindow* win, float dt)
 {
     vec3 temp;
 
+    /* TODO: raycast, if too close to wall don't move closer */
+
     const float speed = 5.0f * dt;
     if (glfwGetKey(win, GLFW_KEY_W) == GLFW_PRESS)
     {
@@ -47,32 +49,11 @@ void player_input(GLFWwindow* win, float dt)
     /* keep player at ground level */
     camera_pos[1] = 0;
 
-    /* do collision detection and resolution */
-    /* check if at / past winpoint */
+    /* check if at/past winpoint */
     if (camera_pos[0] <= -17 && camera_pos[2] >= 17)
     {
         won = 1;
     }
-    for (int i = 0; i < 114; i++) /* X walls */
-    {
-        /*if (camera_pos[0] == Xwalls[i][0] || camera_pos[2] == Xwalls[i][2])
-        {
-            camera_pos[0] = Xwalls[i][0];
-            camera_pos[2] = Xwalls[i][2];
-            logger_log("COLLISION!\n");
-        }*/
-        
-    }
-    for (int i = 0; i < 88; i++) /* Z walls */
-    {
-        /*if (camera_pos[0] == Zwalls[i][0] && camera_pos[2] == Zwalls[i][2])
-        {
-            camera_pos[0] = Zwalls[i][0];
-            camera_pos[2] = Zwalls[i][2];
-        }*/
-    }
-    
-    
 }
 
 /*
