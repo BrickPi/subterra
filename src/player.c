@@ -12,8 +12,6 @@ void player_input(GLFWwindow* win, float dt)
 {
     vec3 temp;
 
-    /* TODO: raycast, if too close to wall don't move closer */
-
     const float speed = 5.0f * dt;
     if (glfwGetKey(win, GLFW_KEY_W) == GLFW_PRESS)
     {
@@ -53,6 +51,13 @@ void player_input(GLFWwindow* win, float dt)
     if (camera_pos[0] <= -17 && camera_pos[2] >= 17)
     {
         won = 1;
+    }
+
+    /* TODO: raycast, if too close to wall don't move closer */
+    float where;
+    if(glm_ray_triangle(camera_pos, (vec3){1,0,0}, 0, 0, 0, &where))
+    {
+        
     }
 }
 
