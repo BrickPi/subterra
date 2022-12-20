@@ -50,7 +50,7 @@ void player_input(GLFWwindow* win, float dt)
     if (camera_pos[0] <= -17 && camera_pos[2] >= 17)
         won = 1;
 
-    vec3 test[2] = {-3.75,-1,-3, -1.25,1,3};
+    vec3 test[2] = {-3.75,-1,-6.75, -1.25,1,6.25};
     if (glm_aabb_point(test, camera_pos))
     {
         lost = 1;
