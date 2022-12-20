@@ -8,6 +8,8 @@ vec3 camera_up = {0,1,0};
 
 mat4 view = GLM_MAT4_IDENTITY_INIT;
 
+void respawn() { glm_vec3_copy(GLM_VEC3_ZERO, camera_pos); }
+
 void player_input(GLFWwindow* win, float dt)
 {
     vec3 temp;
@@ -39,26 +41,23 @@ void player_input(GLFWwindow* win, float dt)
     }
     if (glfwGetKey(win, GLFW_KEY_P) == GLFW_PRESS)
     {
-        char logtxt[32];
+        char logtxt[48];
         sprintf(logtxt, "%f, %f, %f\n", camera_pos[0], camera_pos[1], camera_pos[2]);
         logger_log(logtxt);
     }
 
-    /* keep player at ground level */
-    camera_pos[1] = 0;
-
     /* check if at/past winpoint */
     if (camera_pos[0] <= -17 && camera_pos[2] >= 17)
-    {
         won = 1;
+
+    vec3 test[2] = {-3.75,-1,-3, -1.25,1,3};
+    if (glm_aabb_point(test, camera_pos))
+    {
+        lost = 1;
     }
 
-    /* TODO: raycast, if too close to wall don't move closer */
-    float where;
-    if(glm_ray_triangle(camera_pos, (vec3){1,0,0}, 0, 0, 0, &where))
-    {
-        
-    }
+    /* keep player at ground level */
+    camera_pos[1] = 0;
 }
 
 /*

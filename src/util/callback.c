@@ -59,6 +59,9 @@ void click_cb(GLFWwindow* window, int button, int action, int mods)
             gameActive = 1;
         } else if (won) {
             glfwSetWindowShouldClose(window, 1);   
+        } else if (lost) {
+            respawn();
+            lost = 0;
         }
     }
 }

@@ -1,7 +1,7 @@
 #include "subterra/main.h"
 
 mat4 proj;
-char gameActive = 0, won = 0;
+char gameActive = 0, won = 0, lost = 0;
 
 /* main function, with main loop */
 int main()
@@ -17,6 +17,7 @@ int main()
     unsigned int finishtex = create_texture("res/win.jpg", 0);
     unsigned int startui = create_texture("res/ui.png", 1);
     unsigned int winui = create_texture("res/winui.png", 1);
+    unsigned int loseui = create_texture("res/loseui.png", 1);
 
     /* all the matrix stuff */
     /* each individual object has a model! */
@@ -57,8 +58,26 @@ int main()
             glBindBuffer(GL_ARRAY_BUFFER, PLANEV);
             glBindTexture(GL_TEXTURE_2D, winui);
             glDrawArrays(GL_TRIANGLES, 0, 6);
-        } else if (gameActive)
+        } else if (lost)
         {
+            glActiveTexture(GL_TEXTURE0);
+            glBindVertexArray(VAO);
+            shader_use_flat();
+            mat4 identity = GLM_MAT4_IDENTITY_INIT;
+            shader_uniforms(&identity, &identity, &uimodel);
+            glBindBuffer(GL_ARRAY_BUFFER, PLANEV);
+            glBindTexture(GL_TEXTURE_2D, loseui);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        } else if (!gameActive){
+            glActiveTexture(GL_TEXTURE0);
+            glBindVertexArray(VAO);
+            shader_use_flat();
+            mat4 identity = GLM_MAT4_IDENTITY_INIT;
+            shader_uniforms(&identity, &identity, &uimodel);
+            glBindBuffer(GL_ARRAY_BUFFER, PLANEV);
+            glBindTexture(GL_TEXTURE_2D, startui);
+            glDrawArrays(GL_TRIANGLES, 0, 6);
+        } else {
             float currentFrame = glfwGetTime();
             delta = currentFrame - lastFrame;
             lastFrame = currentFrame;
@@ -87,16 +106,6 @@ int main()
             shader_use_flat();
             shader_uniforms(&proj, view, &finishModel);
             glBindTexture(GL_TEXTURE_2D, finishtex);
-            glDrawArrays(GL_TRIANGLES, 0, 6);
-        }
-        else {
-            glActiveTexture(GL_TEXTURE0);
-            glBindVertexArray(VAO);
-            shader_use_flat();
-            mat4 identity = GLM_MAT4_IDENTITY_INIT;
-            shader_uniforms(&identity, &identity, &uimodel);
-            glBindBuffer(GL_ARRAY_BUFFER, PLANEV);
-            glBindTexture(GL_TEXTURE_2D, startui);
             glDrawArrays(GL_TRIANGLES, 0, 6);
         }
         glfwSwapBuffers(window);
