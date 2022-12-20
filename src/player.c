@@ -50,11 +50,11 @@ void player_input(GLFWwindow* win, float dt)
     if (camera_pos[0] <= -17 && camera_pos[2] >= 17)
         won = 1;
 
-    vec3 test[2] = {-3.75,-1,-6.75, -1.25,1,6.25};
-    if (glm_aabb_point(test, camera_pos))
-    {
+    vec3 a1[2] = {-3.75,-1,-6.75, -1.25,1,6.75};
+    vec3 a2[2] = {-6.25,-1,4.25, -3.75,1,6.75};
+
+    if (glm_aabb_point(a1, camera_pos) || glm_aabb_point(a2, camera_pos))
         lost = 1;
-    }
 
     /* keep player at ground level */
     camera_pos[1] = 0;
@@ -72,7 +72,7 @@ W W D W W W W D D D D W D W D
 W W D D D D D D W W D W W W D
 W D D W W W W W W W D W W D D
 W W D W D D D X D D D W D D W <- X is spawn (0, 0) (D is for DONE)
-W D W W D W W W W W D W W D W
+W D W W D           D W W D W
 W D D D D D D D D W D W W D D
 W W D W W W D W D D D W D W D
 W W D W W W D D W W W W D W D
