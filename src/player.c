@@ -13,7 +13,7 @@ void respawn() { glm_vec3_copy(GLM_VEC3_ZERO, camera_pos); }
 void player_input(GLFWwindow* win, float dt)
 {
     vec3 temp;
-
+    /* apply all the vectors for movement */
     const float speed = 5.0f * dt;
     if (glfwGetKey(win, GLFW_KEY_W) == GLFW_PRESS)
     {
@@ -49,23 +49,10 @@ void player_input(GLFWwindow* win, float dt)
     /* check if at/past winpoint */
     if (camera_pos[0] <= -17 && camera_pos[2] >= 17)
         won = 1;
-
-    vec3 walls[8][2] = {
-        -3.75,-1,-6.75, -1.25,1,6.25,
-        -6.25,-1,3.75, -3.75,1,6.25,
-        1.25,-1,-11.25, 3.75,1,6.25,
-        3.75,-1,1.25, 6.25,1,6.25,
-        -3.75,-1,-6.25, -0.75,1,-3.75,
-        -3.75,-1,-11.25, 0.75,1,-8.75,
-        -3.75,-1,-13.75, -1.25,1,-16.25,
-        -13.75,-1,-13.75, -8.75,1,-8.75
-    };
-
-    for (char i = 0; i < 8; i++)
-    {
-        if(glm_aabb_point(walls[i], camera_pos))
-            lost = 1;
-    }
+    /* and lose point */
+    vec3 walls[2] = {-20,-1,-20, 20,1,20};
+    if(!glm_aabb_point(walls, camera_pos))
+        lost = 1;
 
     /* keep player at ground level */
     camera_pos[1] = 0;
@@ -76,20 +63,20 @@ maze design
 15x15
 
 W W W W W W W W W W W W W W W
-W W D D D D D D D D D D D D D
-D W D W W W W D D W W W W W D
-D D D D D D W _ _ W D D D W D
-W W D W W W W D D D D W D W D
-W W D D D D D D w w D W W W D
-W D D w w w w w w w D W W D D
-W W D w D D D X D D D W D D W <- X is spawn (0, 0) (D is for DONE)
-W D w w D w w w w w D W W D W
-W D D D D D D D D w D W W D D
-W W D W W W D W D D D W D W D
-W W D W W W D D W W W W D W D
-W W D W W W W W W W D D | D D
-W W D D D D D D D D D W W D W
-W W W W W W W D W W W W W D E <- E is for exit!
+W W                          W
+  W   W W W W     W W W W W  W
+            W     W       W  W
+W W   W W W W         W   W  W
+W W             X X   W W W  W
+W     X X X X X X X   W W    W
+W W   W       S       W     W <- X is spawn (0, 0) (D is for DONE)
+W   W W   X X X X X   W W   W
+W                 X   W W    W
+W W   W W W   W       W   W  W
+W W   W W W     W W W W   W  W
+W W   W W W W W W W          W
+W W                     W W   W
+W W W W W W W   W W W W W   E <- E is for exit!
 */
 
 float lastX=320,lastY=240,yaw=-90,pitch=0; /* start at half of default resolution, centre */
